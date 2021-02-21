@@ -36,7 +36,8 @@ class HealthCentre:
         for num in self.quantity:
             for drug in self.list_drugAndprice:
                 if self.quantity.index(num) == self.list_drugAndprice.index(drug):
-                    print('{}\t\t\t\t{}\t\t\t\t{}'.format(num, drug[0], drug[1]))
+                    print('{}\t\t\t\t{}\t\t\t\t{}'.format(
+                        num, drug[0], drug[1]))
 
 
 class Doctor:
@@ -58,7 +59,7 @@ class Doctor:
         patient_response instance variable.
         """
         self.patient_symptoms = []
-        self.process_patient_response = ()
+        self.patient_response = ()
         self.patient_possible_ailment = []
         self.patient_ailment_count = []
 
@@ -70,6 +71,7 @@ class Doctor:
 
         print('YOU >> ')
         self.patient_response = input('Your response here : ')
+        print("PATIENT RESPONSE: {}".format(self.patient_response))
         print('\n')
 
     def diagnose_patient(self):
@@ -91,15 +93,21 @@ class Doctor:
 
             symptomsFileObj = open("symptomsFile.txt", 'r')
             symptoms_string = symptomsFileObj.read()
-            # symptoms_strings = print(f'r"{symptoms_string}"')
-            # print(symptoms_strings)
-            symptomsRegex = re.compile(f'r"{symptoms_string}"', re.I)
 
-            self.patient_symptoms = symptomsRegex.findall(self.patient_response)
+            symptomsRegex = re.compile(r"{}".format(symptoms_string), re.I)
+            # print(symptoms_strings)
+            self.patient_symptoms = symptomsRegex.findall(
+                self.patient_response)
+            print("PATIENT SYMPTOMS: {}".format(self.patient_symptoms))
+
+            self.patient_symptoms = list(
+                filter(lambda a: a != '', self.patient_symptoms))
+            print("PATIENT SYMPTOMS: {}".format(self.patient_symptoms))
 
             # Store the values(ailments) of keys(symptoms) in the doctor_brain to
             # patient_possible_ailment variable. Done through the use of list comprehension
-            self.patient_possible_ailment = [self.doctor_brain[symptom] for symptom in self.patient_symptoms]
+            self.patient_possible_ailment = [
+                self.doctor_brain[symptom] for symptom in self.patient_symptoms]
 
             # This code suit does two things simultaneously:
             # At first it is a filtered list of patient_possible_ailment list to make sure an ailment appears just once.
@@ -143,7 +151,7 @@ class Pharmacist(Doctor):
         'malaria': {'paracetamol': 1, 'vitamin_C': 4},
         'diarrhoea': {'salt': 4, 'aspirin': 5},
         'pimples': {'Funbact A': 1, 'kekozonazo': 1},
-        }
+    }
 
     patient_qty = []
     patient_drug = []
@@ -162,9 +170,11 @@ class Pharmacist(Doctor):
         print('PHARMACIST >> ')
         self.patient_ailment = patient_ailment
         for drug in self.pharmacist_brain[self.patient_ailment]:
-            self.patient_qty.append(self.pharmacist_brain[self.patient_ailment][drug])
+            self.patient_qty.append(
+                self.pharmacist_brain[self.patient_ailment][drug])
             self.patient_drug.append(drug)
-            print('Take {} of {}'.format(self.pharmacist_brain[self.patient_ailment][drug], drug))
+            print('Take {} of {}'.format(
+                self.pharmacist_brain[self.patient_ailment][drug], drug))
 
         print('\nKindly go to the Cashier to get your bills')
 
@@ -188,10 +198,10 @@ class Pharmacist(Doctor):
         self.match_obj = self.drug_listRegex.findall(self.patient_response)
 
         for string in self.match_obj:
-                if string.isdigit():
-                    self.patient_qty.append(string)
-                else:
-                    self.patient_drug.append(string.lower())
+            if string.isdigit():
+                self.patient_qty.append(string)
+            else:
+                self.patient_drug.append(string.lower())
 
         print("""\n=================DRUG LIST=================
         Drug\t\t\t\tQty""")
@@ -228,10 +238,13 @@ class Cashier(HealthCentre, Pharmacist):
         for drug in Pharmacist.patient_drug:
             for qty in Pharmacist.patient_qty:
                 if Pharmacist.patient_drug.index(drug) == Pharmacist.patient_qty.index(qty):
-                    self.price.append(HealthCentre.drugAndprice[drug] * int(qty))
-                    print('{}\t\t\t{}\t\t\t{}\t\t\t\t'.format(drug, qty, HealthCentre.drugAndprice[drug]))
+                    self.price.append(
+                        HealthCentre.drugAndprice[drug] * int(qty))
+                    print('{}\t\t\t{}\t\t\t{}\t\t\t\t'.format(
+                        drug, qty, HealthCentre.drugAndprice[drug]))
         print('=====================================')
         print('TOTAL => #{}'.format(sum(self.price)))
+
 
 if __name__ == "__main__":
     Doctor().diagnose_patient()

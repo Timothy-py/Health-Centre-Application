@@ -40,7 +40,6 @@
   "chest": "Ulcer",
   "abdominal": "Ulcer",
   "abdomen": "Ulcer",
-  "headache": "Malaria",
-  "temperature": "Malaria"
+  "headache": "Malaria"
 }
 }
